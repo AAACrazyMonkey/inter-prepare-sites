@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intern Prep Agent</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.2/markdown-it.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0f1117;
+    color: #e0e0e0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #1e2030;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  header h1 { font-size: 18px; font-weight: 600; color: #f0f0f0; }
+  header .badge { font-size: 11px; background: #2a5a3a; color: #6ee7a0; padding: 2px 8px; border-radius: 10px; }
+
+  #phase-bar {
+    padding: 10px 24px;
+    background: #161825;
+    border-bottom: 1px solid #1e2030;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 13px;
+    color: #888;
+  }
+
+  .phase-step { padding: 4px 12px; border-radius: 6px; transition: all 0.3s; }
+  .phase-step.active { background: #1c3a5e; color: #60a5fa; font-weight: 500; }
+  .phase-step.done { color: #6ee7a0; }
+  .phase-arrow { color: #444; }
+
+  #chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .msg {
+    max-width: 720px;
+    line-height: 1.65;
+    font-size: 14.5px;
+    animation: fadeIn 0.25s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .msg.user {
+    align-self: flex-end;
+    background: #1c3a5e;
+    color: #d0e4ff;
+    padding: 10px 16px;
+    border-radius: 14px 14px 4px 14px;
+    white-space: pre-wrap;
+  }
+
+  .msg.assistant {
+    align-self: flex-start;
+    background: #1a1d2e;
+    padding: 14px 18px;
+    border-radius: 4px 14px 14px 14px;
+    border: 1px solid #252840;
+  }
+
+  .msg.assistant .label {
+    font-size: 11px; color: #60a5fa; margin-bottom: 6px;
+    font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  .msg.assistant .content h1,
+  .msg.assistant .content h2,
+  .msg.assistant .content h3 {
+    color: #f0f0f0; margin: 14px 0 8px; font-weight: 600;
+  }
+  .msg.assistant .content h1 { font-size: 18px; }
+  .msg.assistant .content h2 { font-size: 16px; }
+  .msg.assistant .content h3 { font-size: 14.5px; }
+  .msg.assistant .content p { margin: 8px 0; }
+  .msg.assistant .content ul,
+  .msg.assistant .content ol { margin: 8px 0 8px 20px; }
+  .msg.assistant .content li { margin: 4px 0; }
+  .msg.assistant .content strong { color: #f0f0f0; }
+  .msg.assistant .content em { color: #ccc; }
+  .msg.assistant .content code {
+    background: #252840; padding: 1px 5px; border-radius: 4px;
+    font-family: 'Courier New', monospace; font-size: 13px;
+  }
+  .msg.assistant .content pre {
+    background: #161825; padding: 12px; border-radius: 8px;
+    overflow-x: auto; margin: 8px 0;
+  }
+  .msg.assistant .content pre code { background: none; padding: 0; }
+  .msg.assistant .content blockquote {
+    border-left: 3px solid #60a5fa; padding-left: 12px;
+    margin: 8px 0; color: #aaa;
+  }
+  .msg.assistant .content table {
+    border-collapse: collapse; margin: 10px 0; width: 100%;
+  }
+  .msg.assistant .content th,
+  .msg.assistant .content td {
+    border: 1px solid #252840; padding: 8px 12px;
+    text-align: left; font-size: 13px;
+  }
+  .msg.assistant .content th {
+    background: #161825; color: #f0f0f0; font-weight: 500;
+  }
+  .msg.assistant .content hr {
+    border: none; border-top: 1px solid #252840; margin: 16px 0;
+  }
+
+  .cursor::after { content: '\u258d'; animation: blink 0.8s infinite; color: #60a5fa; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  #assess-form { max-width: 560px; margin: 0 auto; padding: 24px; }
+  #assess-form h2 { font-size: 20px; margin-bottom: 4px; color: #f0f0f0; }
+  #assess-form p.sub { font-size: 13px; color: #888; margin-bottom: 20px; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #ccc; }
+  .form-group select,
+  .form-group input {
+    width: 100%; padding: 9px 12px; background: #1a1d2e;
+    border: 1px solid #252840; border-radius: 8px; color: #e0e0e0;
+    font-size: 14px; font-family: inherit; outline: none; transition: border 0.2s;
+  }
+  .form-group select:focus,
+  .form-group input:focus { border-color: #60a5fa; }
+
+  .chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    padding: 5px 12px; background: #1a1d2e; border: 1px solid #252840;
+    border-radius: 16px; font-size: 12.5px; cursor: pointer;
+    transition: all 0.2s; color: #aaa;
+  }
+  .chip.selected { background: #1c3a5e; border-color: #60a5fa; color: #60a5fa; }
+
+  button.primary {
+    background: #2563eb; color: white; border: none; padding: 10px 24px;
+    border-radius: 8px; font-size: 14px; font-family: inherit; font-weight: 500;
+    cursor: pointer; transition: background 0.2s; margin-top: 8px;
+  }
+  button.primary:hover { background: #1d4ed8; }
+  button.primary:disabled { background: #333; cursor: not-allowed; }
+
+  #input-bar {
+    padding: 12px 24px 16px;
+    border-top: 1px solid #1e2030;
+    display: none;
+    gap: 8px;
+    align-items: flex-end;
+  }
+
+  #input-bar textarea {
+    flex: 1; padding: 10px 14px; background: #1a1d2e;
+    border: 1px solid #252840; border-radius: 10px; color: #e0e0e0;
+    font-size: 14px; font-family: inherit; outline: none; resize: none;
+    min-height: 42px; max-height: 160px; line-height: 1.5; overflow-y: auto;
+  }
+  #input-bar textarea:focus { border-color: #60a5fa; }
+
+  #input-bar button {
+    background: #2563eb; color: white; border: none; padding: 10px 18px;
+    border-radius: 10px; font-size: 14px; cursor: pointer;
+    font-family: inherit; height: 42px;
+  }
+
+  #generate-bar {
+    padding: 8px 24px;
+    border-top: 1px solid #1e2030;
+    display: none;
+    justify-content: center;
+  }
+  #generate-bar button {
+    background: transparent; color: #60a5fa; border: 1px solid #2563eb;
+    padding: 8px 20px; border-radius: 8px; font-size: 13px;
+    font-family: inherit; cursor: pointer; transition: all 0.2s;
+  }
+  #generate-bar button:hover { background: #1c3a5e; }
+
+  .hint-text {
+    font-size: 11px; color: #555; text-align: center; padding: 0 24px 4px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Intern Prep Agent</h1>
+  <span class="badge">Plan Generator</span>
+</header>
+
+<div id="phase-bar">
+  <span class="phase-step active" id="p1">1 Assessment</span>
+  <span class="phase-arrow">&rarr;</span>
+  <span class="phase-step" id="p2">2 Follow-up</span>
+  <span class="phase-arrow">&rarr;</span>
+  <span class="phase-step" id="p3">3 Generate plan</span>
+</div>
+
+<div id="chat">
+  <div id="assess-form">
+    <h2>Let's build your study plan</h2>
+    <p class="sub">Tell us about yourself so we can create a personalized plan.</p>
+
+    <div class="form-group">
+      <label>Target role</label>
+      <select id="f-role">
+        <option value="swe">SWE (Software Engineering)</option>
+        <option value="ml">ML / AI Engineer</option>
+        <option value="ds">Data Science</option>
+        <option value="all">All of the above</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Current level</label>
+      <select id="f-level">
+        <option value="beginner">Beginner &mdash; just getting started</option>
+        <option value="intermediate">Intermediate &mdash; solved some problems</option>
+        <option value="advanced">Advanced &mdash; fairly experienced</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>When do you plan to start applying?</label>
+      <select id="f-timeline">
+        <option value="1_month">Within 1 month</option>
+        <option value="2_3_months">2-3 months</option>
+        <option value="6_months">6 months (fall recruiting)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>LeetCode problems solved so far</label>
+      <input type="number" id="f-lc" value="0" min="0">
+    </div>
+
+    <div class="form-group">
+      <label>Hours available per day</label>
+      <input type="number" id="f-hours" value="2" min="0.5" max="16" step="0.5">
+    </div>
+
+    <div class="form-group">
+      <label>Weak topics (click to select)</label>
+      <div class="chip-group" id="weak-chips">
+        <span class="chip" data-v="arrays">Arrays</span>
+        <span class="chip" data-v="strings">Strings</span>
+        <span class="chip" data-v="hash_tables">Hash Tables</span>
+        <span class="chip" data-v="two_pointers">Two Pointers</span>
+        <span class="chip" data-v="sliding_window">Sliding Window</span>
+        <span class="chip" data-v="stacks">Stacks</span>
+        <span class="chip" data-v="binary_search">Binary Search</span>
+        <span class="chip" data-v="linked_lists">Linked Lists</span>
+        <span class="chip" data-v="trees">Trees</span>
+        <span class="chip" data-v="graphs">Graphs</span>
+        <span class="chip" data-v="dp">Dynamic Programming</span>
+        <span class="chip" data-v="backtracking">Backtracking</span>
+        <span class="chip" data-v="greedy">Greedy</span>
+        <span class="chip" data-v="system_design">System Design</span>
+        <span class="chip" data-v="behavioral">Behavioral</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Target companies (comma separated)</label>
+      <input type="text" id="f-companies" placeholder="google, meta, amazon...">
+    </div>
+
+    <button class="primary" onclick="submitAssessment()">Start Assessment &rarr;</button>
+  </div>
+</div>
+
+<div id="generate-bar">
+  <button onclick="generatePlan(this)">I'm ready &mdash; generate my study plan &rarr;</button>
+</div>
+
+<div class="hint-text" id="hint-text" style="display:none">
+  Continue chatting to refine your plan, or click the button above when ready.
+</div>
+
+<div id="input-bar">
+  <textarea id="user-input" rows="1" placeholder="Type your response... (Shift+Enter for new line)"></textarea>
+  <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+var mdit = window.markdownit({ html: true, breaks: true, linkify: true, typographer: true });
+
+var API = '';
+var userId = 1;
+var phase = 1;
+
+document.querySelectorAll('.chip').forEach(function(c) {
+  c.onclick = function() { c.classList.toggle('selected'); };
+});
+
+var textarea = document.getElementById('user-input');
+textarea.addEventListener('input', function() {
+  textarea.style.height = 'auto';
+  textarea.style.height = Math.min(textarea.scrollHeight, 160) + 'px';
+});
+textarea.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+function getSelectedChips(id) {
+  return Array.from(document.querySelectorAll('#' + id + ' .chip.selected')).map(function(c) { return c.dataset.v; });
+}
+
+function renderMarkdown(text) {
+  return mdit.render(text);
+}
+
+function addMessage(role, text, useMarkdown) {
+  var chat = document.getElementById('chat');
+  var div = document.createElement('div');
+  div.className = 'msg ' + role;
+  if (role === 'assistant') {
+    div.innerHTML = '<div class="label">Prep Coach</div><div class="content"></div>';
+    var content = div.querySelector('.content');
+    if (useMarkdown) {
+      content.innerHTML = renderMarkdown(text);
+    } else {
+      content.textContent = text;
+    }
+  } else {
+    div.textContent = text;
+  }
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+function setPhase(n) {
+  phase = n;
+  for (var i = 1; i <= 3; i++) {
+    var el = document.getElementById('p' + i);
+    el.className = 'phase-step' + (i === n ? ' active' : i < n ? ' done' : '');
+  }
+}
+
+function submitAssessment() {
+  var body = {
+    target_role: document.getElementById('f-role').value,
+    coding_level: document.getElementById('f-level').value,
+    timeline: document.getElementById('f-timeline').value,
+    leetcode_count: parseInt(document.getElementById('f-lc').value) || 0,
+    familiar_topics: [],
+    weak_topics: getSelectedChips('weak-chips'),
+    hours_per_day: parseFloat(document.getElementById('f-hours').value) || 2,
+    target_companies: document.getElementById('f-companies').value.split(',').map(function(s) { return s.trim(); }).filter(Boolean),
+  };
+
+  document.getElementById('assess-form').remove();
+  addMessage('user', 'Role: ' + body.target_role + ' | Level: ' + body.coding_level + ' | Timeline: ' + body.timeline);
+  var loadMsg = addMessage('assistant', 'Analyzing your profile...');
+
+  fetch(API + '/api/plan/assess', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    userId = data.user_id;
+    loadMsg.querySelector('.content').innerHTML = renderMarkdown(data.assessment_summary);
+
+    var questions = data.follow_up_questions.map(function(q, i) { return (i + 1) + '. ' + q; }).join('\n');
+    addMessage('assistant', questions, true);
+
+    document.getElementById('input-bar').style.display = 'flex';
+    document.getElementById('generate-bar').style.display = 'flex';
+    document.getElementById('hint-text').style.display = 'block';
+    textarea.focus();
+    setPhase(2);
+  })
+  .catch(function(e) {
+    loadMsg.querySelector('.content').textContent = 'Error: ' + e.message;
+  });
+}
+
+function sendMessage() {
+  var text = textarea.value.trim();
+  if (!text) return;
+
+  textarea.value = '';
+  textarea.style.height = 'auto';
+  addMessage('user', text);
+
+  var msgDiv = addMessage('assistant', '');
+  var content = msgDiv.querySelector('.content');
+  content.classList.add('cursor');
+
+  fetch(API + '/api/plan/follow-up/stream', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId, message: text }),
+  })
+  .then(function(res) {
+    var reader = res.body.getReader();
+    var decoder = new TextDecoder();
+    var fullText = '';
+
+    function read() {
+      reader.read().then(function(result) {
+        if (result.done) {
+          content.classList.remove('cursor');
+          content.innerHTML = renderMarkdown(fullText);
+          return;
+        }
+
+        var chunk = decoder.decode(result.value);
+        var lines = chunk.split('\n');
+
+        for (var i = 0; i < lines.length; i++) {
+          if (lines[i].indexOf('data: ') === 0) {
+            var data = lines[i].slice(6);
+            if (data.trim() === '[DONE]') {
+              content.classList.remove('cursor');
+              content.innerHTML = renderMarkdown(fullText);
+              return;
+            }
+            fullText += data;
+            content.textContent = fullText;
+            document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
+          }
+        }
+        read();
+      });
+    }
+    read();
+  })
+  .catch(function(e) {
+    content.textContent = 'Error: ' + e.message;
+    content.classList.remove('cursor');
+  });
+}
+
+function generatePlan(btn) {
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  setPhase(3);
+
+  document.getElementById('input-bar').style.display = 'none';
+  document.getElementById('generate-bar').style.display = 'none';
+  document.getElementById('hint-text').style.display = 'none';
+
+  var loadMsg = addMessage('assistant', 'Generating your personalized study plan...');
+
+  fetch(API + '/api/plan/generate?user_id=' + userId, { method: 'POST' })
+  .then(function(res) { return res.json(); })
+  .then(function(plan) {
+    var planMd = '## Your ' + plan.total_weeks + '-week study plan\n\n';
+    for (var w = 0; w < plan.weeks.length; w++) {
+      var week = plan.weeks[w];
+      planMd += '### Week ' + week.week_number + ': ' + week.theme + '\n\n';
+      for (var t = 0; t < week.topics.length; t++) {
+        var topic = week.topics[t];
+        planMd += '- **' + topic.topic + '** — ' + topic.priority + ' priority, ~' + topic.estimated_hours + 'h\n';
+        if (topic.suggested_problems && topic.suggested_problems.length) {
+          planMd += '  - Problems: ' + topic.suggested_problems.join(', ') + '\n';
+        }
+      }
+      planMd += '\n> **Goal:** ' + week.weekly_goal + '\n\n';
+    }
+    planMd += '---\n\n**Daily routine:** ' + plan.daily_routine_suggestion + '\n\n';
+    if (plan.notes) planMd += '**Notes:** ' + plan.notes + '\n';
+
+    loadMsg.querySelector('.content').innerHTML = renderMarkdown(planMd);
+  })
+  .catch(function(e) {
+    loadMsg.querySelector('.content').textContent = 'Error generating plan: ' + e.message;
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: intern-prep-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: intern
+      POSTGRES_PASSWORD: intern_dev_pw
+      POSTGRES_DB: intern_prep
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
