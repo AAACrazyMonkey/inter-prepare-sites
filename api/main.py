@@ -6,6 +6,7 @@ from sqlalchemy import text
 from db.session import engine
 from db.models import Base
 from api.routes.plan import router as plan_router
+from api.routes.interview import router as interview_router
 from fastapi.responses import HTMLResponse
 from pathlib import Path
 
@@ -42,6 +43,7 @@ async def health_check():
 
 # Register routers
 app.include_router(plan_router, prefix="/api")
+app.include_router(interview_router, prefix="/api")
 
 
 @app.get("/health/db")

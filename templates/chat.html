@@ -24,10 +24,46 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-wrap: wrap;
   }
 
   header h1 { font-size: 18px; font-weight: 600; color: #f0f0f0; }
   header .badge { font-size: 11px; background: #2a5a3a; color: #6ee7a0; padding: 2px 8px; border-radius: 10px; }
+
+  .nav {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+    background: #161825;
+    border: 1px solid #252840;
+    border-radius: 8px;
+    padding: 4px;
+  }
+
+  .nav button {
+    background: transparent;
+    color: #8f96ad;
+    border: 0;
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .nav button.active {
+    background: #1c3a5e;
+    color: #d0e4ff;
+  }
+
+  .app-view {
+    flex: 1;
+    min-height: 0;
+    display: none;
+    flex-direction: column;
+  }
+
+  .app-view.active { display: flex; }
 
   #phase-bar {
     padding: 10px 24px;
@@ -137,13 +173,16 @@
   .form-group { margin-bottom: 16px; }
   .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #ccc; }
   .form-group select,
-  .form-group input {
+  .form-group input,
+  .form-group textarea {
     width: 100%; padding: 9px 12px; background: #1a1d2e;
     border: 1px solid #252840; border-radius: 8px; color: #e0e0e0;
     font-size: 14px; font-family: inherit; outline: none; transition: border 0.2s;
   }
   .form-group select:focus,
-  .form-group input:focus { border-color: #60a5fa; }
+  .form-group input:focus,
+  .form-group textarea:focus { border-color: #60a5fa; }
+  .form-group textarea { resize: vertical; min-height: 88px; line-height: 1.5; }
 
   .chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
   .chip {
@@ -199,6 +238,156 @@
   .hint-text {
     font-size: 11px; color: #555; text-align: center; padding: 0 24px 4px;
   }
+
+  .page {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 24px;
+  }
+
+  .panel {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .panel h2 {
+    color: #f0f0f0;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  .panel .sub {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 22px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .rating {
+    display: flex;
+    gap: 8px;
+  }
+
+  .rating button {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #252840;
+    background: #1a1d2e;
+    color: #aaa;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .rating button.selected {
+    border-color: #60a5fa;
+    background: #1c3a5e;
+    color: #d0e4ff;
+  }
+
+  .result-box,
+  .empty-state {
+    margin-top: 20px;
+    background: #1a1d2e;
+    border: 1px solid #252840;
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .result-box h3,
+  .empty-state h3 {
+    color: #f0f0f0;
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 18px 0 22px;
+  }
+
+  .metric {
+    background: #1a1d2e;
+    border: 1px solid #252840;
+    border-radius: 8px;
+    padding: 14px;
+  }
+
+  .metric .value {
+    color: #f0f0f0;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .metric .label {
+    color: #888;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  .chart {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(28px, 1fr));
+    gap: 10px;
+    align-items: end;
+    height: 220px;
+    padding: 16px 12px 8px;
+    background: #1a1d2e;
+    border: 1px solid #252840;
+    border-radius: 8px;
+  }
+
+  .bar-wrap {
+    display: flex;
+    min-width: 0;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 7px;
+  }
+
+  .bar-value {
+    color: #ccc;
+    font-size: 12px;
+    min-height: 16px;
+  }
+
+  .bar {
+    width: 100%;
+    max-width: 42px;
+    min-height: 3px;
+    background: #60a5fa;
+    border-radius: 5px 5px 2px 2px;
+  }
+
+  .bar-label {
+    color: #777;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .quick-actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  @media (max-width: 680px) {
+    header { align-items: flex-start; }
+    .nav { width: 100%; margin-left: 0; }
+    .nav button { flex: 1; }
+    .form-row,
+    .metric-grid { grid-template-columns: 1fr; }
+    .chart { gap: 6px; }
+  }
 </style>
 </head>
 <body>
@@ -206,100 +395,262 @@
 <header>
   <h1>Intern Prep Agent</h1>
   <span class="badge">Plan Generator</span>
+  <nav class="nav" aria-label="Main views">
+    <button class="active" data-view="plan" onclick="showView('plan')">Plan</button>
+    <button data-view="checkin" onclick="showView('checkin')">Check-in</button>
+    <button data-view="progress" onclick="showView('progress')">Progress</button>
+    <button data-view="interview" onclick="showView('interview')">Interview</button>
+  </nav>
 </header>
 
-<div id="phase-bar">
-  <span class="phase-step active" id="p1">1 Assessment</span>
-  <span class="phase-arrow">&rarr;</span>
-  <span class="phase-step" id="p2">2 Follow-up</span>
-  <span class="phase-arrow">&rarr;</span>
-  <span class="phase-step" id="p3">3 Generate plan</span>
-</div>
+<div id="plan-view" class="app-view active">
+  <div id="phase-bar">
+    <span class="phase-step active" id="p1">1 Assessment</span>
+    <span class="phase-arrow">&rarr;</span>
+    <span class="phase-step" id="p2">2 Follow-up</span>
+    <span class="phase-arrow">&rarr;</span>
+    <span class="phase-step" id="p3">3 Generate plan</span>
+  </div>
 
-<div id="chat">
-  <div id="assess-form">
-    <h2>Let's build your study plan</h2>
-    <p class="sub">Tell us about yourself so we can create a personalized plan.</p>
+  <div id="chat">
+    <div id="assess-form">
+      <h2>Let's build your study plan</h2>
+      <p class="sub">Tell us about yourself so we can create a personalized plan.</p>
 
-    <div class="form-group">
-      <label>Target role</label>
-      <select id="f-role">
-        <option value="swe">SWE (Software Engineering)</option>
-        <option value="ml">ML / AI Engineer</option>
-        <option value="ds">Data Science</option>
-        <option value="all">All of the above</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Current level</label>
-      <select id="f-level">
-        <option value="beginner">Beginner &mdash; just getting started</option>
-        <option value="intermediate">Intermediate &mdash; solved some problems</option>
-        <option value="advanced">Advanced &mdash; fairly experienced</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>When do you plan to start applying?</label>
-      <select id="f-timeline">
-        <option value="1_month">Within 1 month</option>
-        <option value="2_3_months">2-3 months</option>
-        <option value="6_months">6 months (fall recruiting)</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>LeetCode problems solved so far</label>
-      <input type="number" id="f-lc" value="0" min="0">
-    </div>
-
-    <div class="form-group">
-      <label>Hours available per day</label>
-      <input type="number" id="f-hours" value="2" min="0.5" max="16" step="0.5">
-    </div>
-
-    <div class="form-group">
-      <label>Weak topics (click to select)</label>
-      <div class="chip-group" id="weak-chips">
-        <span class="chip" data-v="arrays">Arrays</span>
-        <span class="chip" data-v="strings">Strings</span>
-        <span class="chip" data-v="hash_tables">Hash Tables</span>
-        <span class="chip" data-v="two_pointers">Two Pointers</span>
-        <span class="chip" data-v="sliding_window">Sliding Window</span>
-        <span class="chip" data-v="stacks">Stacks</span>
-        <span class="chip" data-v="binary_search">Binary Search</span>
-        <span class="chip" data-v="linked_lists">Linked Lists</span>
-        <span class="chip" data-v="trees">Trees</span>
-        <span class="chip" data-v="graphs">Graphs</span>
-        <span class="chip" data-v="dp">Dynamic Programming</span>
-        <span class="chip" data-v="backtracking">Backtracking</span>
-        <span class="chip" data-v="greedy">Greedy</span>
-        <span class="chip" data-v="system_design">System Design</span>
-        <span class="chip" data-v="behavioral">Behavioral</span>
+      <div class="form-group">
+        <label>Target role</label>
+        <select id="f-role">
+          <option value="swe">SWE (Software Engineering)</option>
+          <option value="ml">ML / AI Engineer</option>
+          <option value="ds">Data Science</option>
+          <option value="all">All of the above</option>
+        </select>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label>Target companies (comma separated)</label>
-      <input type="text" id="f-companies" placeholder="google, meta, amazon...">
-    </div>
+      <div class="form-group">
+        <label>Current level</label>
+        <select id="f-level">
+          <option value="beginner">Beginner &mdash; just getting started</option>
+          <option value="intermediate">Intermediate &mdash; solved some problems</option>
+          <option value="advanced">Advanced &mdash; fairly experienced</option>
+        </select>
+      </div>
 
-    <button class="primary" onclick="submitAssessment()">Start Assessment &rarr;</button>
+      <div class="form-group">
+        <label>When do you plan to start applying?</label>
+        <select id="f-timeline">
+          <option value="1_month">Within 1 month</option>
+          <option value="2_3_months">2-3 months</option>
+          <option value="6_months">6 months (fall recruiting)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>LeetCode problems solved so far</label>
+        <input type="number" id="f-lc" value="0" min="0">
+      </div>
+
+      <div class="form-group">
+        <label>Hours available per day</label>
+        <input type="number" id="f-hours" value="2" min="0.5" max="16" step="0.5">
+      </div>
+
+      <div class="form-group">
+        <label>Weak topics (click to select)</label>
+        <div class="chip-group" id="weak-chips">
+          <span class="chip" data-v="arrays">Arrays</span>
+          <span class="chip" data-v="strings">Strings</span>
+          <span class="chip" data-v="hash_tables">Hash Tables</span>
+          <span class="chip" data-v="two_pointers">Two Pointers</span>
+          <span class="chip" data-v="sliding_window">Sliding Window</span>
+          <span class="chip" data-v="stacks">Stacks</span>
+          <span class="chip" data-v="binary_search">Binary Search</span>
+          <span class="chip" data-v="linked_lists">Linked Lists</span>
+          <span class="chip" data-v="trees">Trees</span>
+          <span class="chip" data-v="graphs">Graphs</span>
+          <span class="chip" data-v="dp">Dynamic Programming</span>
+          <span class="chip" data-v="backtracking">Backtracking</span>
+          <span class="chip" data-v="greedy">Greedy</span>
+          <span class="chip" data-v="system_design">System Design</span>
+          <span class="chip" data-v="behavioral">Behavioral</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Target companies (comma separated)</label>
+        <input type="text" id="f-companies" placeholder="google, meta, amazon...">
+      </div>
+
+      <button class="primary" onclick="submitAssessment()">Start Assessment &rarr;</button>
+    </div>
+  </div>
+
+  <div id="generate-bar">
+    <button onclick="generatePlan(this)">I'm ready &mdash; generate my study plan &rarr;</button>
+  </div>
+
+  <div class="hint-text" id="hint-text" style="display:none">
+    Continue chatting to refine your plan, or click the button above when ready.
+  </div>
+
+  <div id="input-bar">
+    <textarea id="user-input" rows="1" placeholder="Type your response... (Shift+Enter for new line)"></textarea>
+    <button onclick="sendMessage()">Send</button>
   </div>
 </div>
 
-<div id="generate-bar">
-  <button onclick="generatePlan(this)">I'm ready &mdash; generate my study plan &rarr;</button>
+<div id="checkin-view" class="app-view">
+  <div class="page">
+    <div class="panel">
+      <h2>Daily check-in</h2>
+      <p class="sub">Record today's practice and get a quick coach response.</p>
+
+      <div class="form-group">
+        <label>Topics studied today</label>
+        <div class="chip-group" id="checkin-topic-chips">
+          <span class="chip" data-v="arrays">Arrays</span>
+          <span class="chip" data-v="strings">Strings</span>
+          <span class="chip" data-v="hash_tables">Hash Tables</span>
+          <span class="chip" data-v="two_pointers">Two Pointers</span>
+          <span class="chip" data-v="sliding_window">Sliding Window</span>
+          <span class="chip" data-v="stacks">Stacks</span>
+          <span class="chip" data-v="binary_search">Binary Search</span>
+          <span class="chip" data-v="linked_lists">Linked Lists</span>
+          <span class="chip" data-v="trees">Trees</span>
+          <span class="chip" data-v="graphs">Graphs</span>
+          <span class="chip" data-v="dp">Dynamic Programming</span>
+          <span class="chip" data-v="backtracking">Backtracking</span>
+          <span class="chip" data-v="greedy">Greedy</span>
+          <span class="chip" data-v="system_design">System Design</span>
+          <span class="chip" data-v="behavioral">Behavioral</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>LeetCode solved</label>
+          <input type="number" id="c-solved" value="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>Correct answers</label>
+          <input type="number" id="c-correct" value="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>Hours studied</label>
+          <input type="number" id="c-hours" value="1" min="0" max="16" step="0.25">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>What felt difficult today?</label>
+        <textarea id="c-notes" placeholder="Optional"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Self rating</label>
+        <div class="rating" id="confidence-rating">
+          <button type="button" data-v="1">1</button>
+          <button type="button" data-v="2">2</button>
+          <button type="button" data-v="3" class="selected">3</button>
+          <button type="button" data-v="4">4</button>
+          <button type="button" data-v="5">5</button>
+        </div>
+      </div>
+
+      <button class="primary" id="checkin-submit" onclick="submitCheckin(this)">Submit check-in</button>
+      <div id="checkin-result"></div>
+    </div>
+  </div>
 </div>
 
-<div class="hint-text" id="hint-text" style="display:none">
-  Continue chatting to refine your plan, or click the button above when ready.
+<div id="progress-view" class="app-view">
+  <div class="page">
+    <div class="panel">
+      <h2>Progress</h2>
+      <p class="sub">A 7-day view of practice volume and study consistency.</p>
+      <button class="primary" onclick="loadProgress()">Refresh progress</button>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="value" id="m-total-problems">0</div>
+          <div class="label">Problems solved</div>
+        </div>
+        <div class="metric">
+          <div class="value" id="m-total-hours">0</div>
+          <div class="label">Study hours</div>
+        </div>
+        <div class="metric">
+          <div class="value" id="m-streak">0</div>
+          <div class="label">Current streak</div>
+        </div>
+      </div>
+      <div class="chart" id="progress-chart"></div>
+      <div id="progress-empty" class="empty-state" style="display:none">
+        <h3>No check-ins yet</h3>
+        <p class="sub">Submit a daily check-in and your 7-day chart will fill in here.</p>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div id="input-bar">
-  <textarea id="user-input" rows="1" placeholder="Type your response... (Shift+Enter for new line)"></textarea>
-  <button onclick="sendMessage()">Send</button>
+<div id="interview-view" class="app-view">
+  <div class="page">
+    <div class="panel">
+      <h2>Interview Coach</h2>
+      <p class="sub">Generate coding questions from a JD, answer one by one, and get scored feedback.</p>
+
+      <div id="interview-start">
+        <div class="form-group">
+          <label>Select a saved job</label>
+          <select id="i-job-select">
+            <option value="">Manual JD</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Job description</label>
+          <textarea id="i-jd" placeholder="Paste a job description here, or choose one from saved jobs."></textarea>
+        </div>
+
+        <button class="primary" onclick="startInterview(this)">Generate questions</button>
+        <div id="i-start-status"></div>
+      </div>
+
+      <div id="interview-session" style="display:none">
+        <div class="metric-grid">
+          <div class="metric">
+            <div class="value" id="i-progress">1 / 4</div>
+            <div class="label">Question</div>
+          </div>
+          <div class="metric">
+            <div class="value" id="i-difficulty">-</div>
+            <div class="label">Difficulty</div>
+          </div>
+          <div class="metric">
+            <div class="value" id="i-session-id">-</div>
+            <div class="label">Session</div>
+          </div>
+        </div>
+
+        <div class="result-box">
+          <h3 id="i-question-title">Question</h3>
+          <p id="i-question-description"></p>
+          <div class="chip-group" id="i-focus-points"></div>
+        </div>
+
+        <div class="form-group" style="margin-top:18px">
+          <label>Your answer</label>
+          <textarea id="i-answer" placeholder="Explain your approach, complexity, edge cases, and final solution."></textarea>
+        </div>
+
+        <button class="primary" id="i-submit-answer" onclick="submitInterviewAnswer(this)">Submit answer</button>
+        <button class="primary" id="i-next-question" onclick="nextInterviewQuestion()" style="display:none">Next question</button>
+        <button class="primary" id="i-finish" onclick="finishInterview(this)" style="display:none">Finish interview</button>
+
+        <div id="i-feedback"></div>
+        <div id="i-report"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -308,9 +659,37 @@ var mdit = window.markdownit({ html: true, breaks: true, linkify: true, typograp
 var API = '';
 var userId = 1;
 var phase = 1;
+var activeView = 'plan';
+var generatedPlanHtml = '';
+var confidenceRating = 3;
+var interviewJobsLoaded = false;
+var interviewJobs = [];
+var interviewSessionId = null;
+var interviewQuestions = [];
+var interviewQuestionIndex = 0;
+var interviewFeedbackByQuestion = {};
 
 document.querySelectorAll('.chip').forEach(function(c) {
   c.onclick = function() { c.classList.toggle('selected'); };
+});
+
+document.querySelectorAll('#confidence-rating button').forEach(function(btn) {
+  btn.onclick = function() {
+    confidenceRating = parseInt(btn.dataset.v, 10);
+    document.querySelectorAll('#confidence-rating button').forEach(function(b) {
+      b.classList.toggle('selected', b === btn);
+    });
+  };
+});
+
+var interviewJobSelect = document.getElementById('i-job-select');
+interviewJobSelect.addEventListener('change', function() {
+  var selected = interviewJobs.find(function(job) {
+    return String(job.id) === interviewJobSelect.value;
+  });
+  if (selected && selected.jd_text) {
+    document.getElementById('i-jd').value = selected.jd_text;
+  }
 });
 
 var textarea = document.getElementById('user-input');
@@ -333,6 +712,15 @@ function renderMarkdown(text) {
   return mdit.render(text);
 }
 
+function escapeHtml(text) {
+  return String(text || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function addMessage(role, text, useMarkdown) {
   var chat = document.getElementById('chat');
   var div = document.createElement('div');
@@ -351,6 +739,18 @@ function addMessage(role, text, useMarkdown) {
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
   return div;
+}
+
+function showView(view) {
+  activeView = view;
+  document.querySelectorAll('.app-view').forEach(function(el) {
+    el.classList.toggle('active', el.id === view + '-view');
+  });
+  document.querySelectorAll('.nav button').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.view === view);
+  });
+  if (view === 'progress') loadProgress();
+  if (view === 'interview') loadInterviewJobs();
 }
 
 function setPhase(n) {
@@ -487,11 +887,358 @@ function generatePlan(btn) {
     }
     planMd += '---\n\n**Daily routine:** ' + plan.daily_routine_suggestion + '\n\n';
     if (plan.notes) planMd += '**Notes:** ' + plan.notes + '\n';
+    planMd = planMd.replace(/\u9225\?/g, '-');
 
-    loadMsg.querySelector('.content').innerHTML = renderMarkdown(planMd);
+    generatedPlanHtml = renderMarkdown(planMd) +
+      '<div class="quick-actions"><button class="primary" onclick="showView(\'checkin\')">Go to Check-in</button></div>';
+    loadMsg.querySelector('.content').innerHTML = generatedPlanHtml;
   })
   .catch(function(e) {
     loadMsg.querySelector('.content').textContent = 'Error generating plan: ' + e.message;
+  });
+}
+
+function todayIsoDate() {
+  var now = new Date();
+  var offset = now.getTimezoneOffset() * 60000;
+  return new Date(now.getTime() - offset).toISOString().slice(0, 10);
+}
+
+function submitCheckin(btn) {
+  var solved = parseInt(document.getElementById('c-solved').value, 10) || 0;
+  var correct = parseInt(document.getElementById('c-correct').value, 10) || 0;
+  var hours = parseFloat(document.getElementById('c-hours').value) || 0;
+  if (correct > solved) correct = solved;
+
+  var body = {
+    user_id: userId,
+    date: todayIsoDate(),
+    topics_studied: getSelectedChips('checkin-topic-chips'),
+    leetcode_solved: solved,
+    leetcode_correct: correct,
+    hours_studied: hours,
+    difficulty_notes: document.getElementById('c-notes').value.trim(),
+    confidence_rating: confidenceRating,
+  };
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+  document.getElementById('checkin-result').innerHTML =
+    '<div class="result-box"><h3>Saving today</h3><p class="sub">Getting your coach feedback...</p></div>';
+
+  fetch(API + '/api/plan/checkin', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  .then(function(res) {
+    if (!res.ok) throw new Error('Check-in failed');
+    return res.json();
+  })
+  .then(function(data) {
+    document.getElementById('checkin-result').innerHTML =
+      '<div class="result-box">' +
+        '<h3>Coach feedback</h3>' +
+        '<div>' + renderMarkdown(data.summary || '') + '</div>' +
+        '<div>' + renderMarkdown(data.encouragement || '') + '</div>' +
+        '<div class="metric-grid">' +
+          '<div class="metric"><div class="value">' + (data.streak_days || 0) + '</div><div class="label">Day streak</div></div>' +
+          '<div class="metric"><div class="value">' + (data.total_problems_solved || 0) + '</div><div class="label">Total solved</div></div>' +
+          '<div class="metric"><div class="value">' + correct + '/' + solved + '</div><div class="label">Today correct</div></div>' +
+        '</div>' +
+      '</div>';
+  })
+  .catch(function(e) {
+    document.getElementById('checkin-result').innerHTML =
+      '<div class="result-box"><h3>Could not save check-in</h3><p class="sub">' + e.message + '</p></div>';
+  })
+  .finally(function() {
+    btn.disabled = false;
+    btn.textContent = 'Submit check-in';
+  });
+}
+
+function makeLastSevenDays() {
+  var days = [];
+  for (var i = 6; i >= 0; i--) {
+    var d = new Date();
+    d.setDate(d.getDate() - i);
+    var offset = d.getTimezoneOffset() * 60000;
+    var iso = new Date(d.getTime() - offset).toISOString().slice(0, 10);
+    days.push(iso);
+  }
+  return days;
+}
+
+function calculateStreak(logs) {
+  var dates = {};
+  logs.forEach(function(log) { dates[log.date] = true; });
+  var streak = 0;
+  var d = new Date();
+  while (true) {
+    var offset = d.getTimezoneOffset() * 60000;
+    var iso = new Date(d.getTime() - offset).toISOString().slice(0, 10);
+    if (!dates[iso]) break;
+    streak += 1;
+    d.setDate(d.getDate() - 1);
+  }
+  return streak;
+}
+
+function renderProgress(data) {
+  var logs = data.logs || [];
+  var byDate = {};
+  logs.forEach(function(log) { byDate[log.date] = log; });
+  var days = makeLastSevenDays();
+  var values = days.map(function(day) {
+    return byDate[day] ? byDate[day].lc_solved : 0;
+  });
+  var maxSolved = Math.max(1, Math.max.apply(null, values));
+
+  document.getElementById('m-total-problems').textContent = data.total_problems || 0;
+  document.getElementById('m-total-hours').textContent = ((data.total_hours || 0) * 10 % 10 === 0)
+    ? (data.total_hours || 0).toFixed(0)
+    : (data.total_hours || 0).toFixed(1);
+  document.getElementById('m-streak').textContent = calculateStreak(logs);
+  document.getElementById('progress-empty').style.display = logs.length ? 'none' : 'block';
+  document.getElementById('progress-empty').innerHTML =
+    '<h3>No check-ins yet</h3><p class="sub">Submit a daily check-in and your 7-day chart will fill in here.</p>';
+
+  document.getElementById('progress-chart').innerHTML = days.map(function(day) {
+    var solved = byDate[day] ? byDate[day].lc_solved : 0;
+    var height = Math.max(3, Math.round((solved / maxSolved) * 150));
+    var label = day.slice(5).replace('-', '/');
+    return '<div class="bar-wrap">' +
+      '<div class="bar-value">' + solved + '</div>' +
+      '<div class="bar" style="height:' + height + 'px"></div>' +
+      '<div class="bar-label">' + label + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function loadProgress() {
+  fetch(API + '/api/plan/progress/' + userId + '?days=7')
+  .then(function(res) {
+    if (!res.ok) throw new Error('Progress unavailable');
+    return res.json();
+  })
+  .then(renderProgress)
+  .catch(function(e) {
+    document.getElementById('progress-chart').innerHTML = '';
+    document.getElementById('progress-empty').style.display = 'block';
+    document.getElementById('progress-empty').innerHTML =
+      '<h3>Could not load progress</h3><p class="sub">' + e.message + '</p>';
+  });
+}
+
+function loadInterviewJobs() {
+  if (interviewJobsLoaded) return;
+  fetch(API + '/api/interview/jobs')
+  .then(function(res) {
+    if (!res.ok) throw new Error('Could not load jobs');
+    return res.json();
+  })
+  .then(function(data) {
+    interviewJobsLoaded = true;
+    interviewJobs = data.jobs || [];
+    var select = document.getElementById('i-job-select');
+    select.innerHTML = '<option value="">Manual JD</option>' + interviewJobs.map(function(job) {
+      return '<option value="' + job.id + '">' + escapeHtml(job.company + ' - ' + job.title) + '</option>';
+    }).join('');
+  })
+  .catch(function() {
+    interviewJobsLoaded = true;
+  });
+}
+
+function startInterview(btn) {
+  var jdText = document.getElementById('i-jd').value.trim();
+  var jobId = document.getElementById('i-job-select').value;
+  if (!jdText && !jobId) {
+    document.getElementById('i-start-status').innerHTML =
+      '<div class="result-box"><h3>Missing JD</h3><p class="sub">Paste a job description or choose a saved job.</p></div>';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  document.getElementById('i-start-status').innerHTML =
+    '<div class="result-box"><h3>Preparing interview</h3><p class="sub">Generating coding questions from the JD...</p></div>';
+  document.getElementById('i-report').innerHTML = '';
+
+  fetch(API + '/api/interview/start', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      user_id: userId,
+      jd_text: jdText,
+      job_id: jobId ? parseInt(jobId, 10) : null,
+      num_questions: 4,
+    }),
+  })
+  .then(function(res) {
+    if (!res.ok) throw new Error('Could not start interview');
+    return res.json();
+  })
+  .then(function(data) {
+    interviewSessionId = data.session_id;
+    interviewQuestions = data.questions || [];
+    interviewQuestionIndex = 0;
+    interviewFeedbackByQuestion = {};
+    document.getElementById('interview-start').style.display = 'none';
+    document.getElementById('interview-session').style.display = 'block';
+    document.getElementById('i-session-id').textContent = interviewSessionId;
+    renderInterviewQuestion();
+  })
+  .catch(function(e) {
+    document.getElementById('i-start-status').innerHTML =
+      '<div class="result-box"><h3>Could not start interview</h3><p class="sub">' + e.message + '</p></div>';
+  })
+  .finally(function() {
+    btn.disabled = false;
+    btn.textContent = 'Generate questions';
+  });
+}
+
+function renderInterviewQuestion() {
+  var question = interviewQuestions[interviewQuestionIndex] || {};
+  document.getElementById('i-progress').textContent =
+    (interviewQuestionIndex + 1) + ' / ' + interviewQuestions.length;
+  document.getElementById('i-difficulty').textContent = question.difficulty || '-';
+  document.getElementById('i-question-title').textContent =
+    question.title || ('Question ' + (interviewQuestionIndex + 1));
+  document.getElementById('i-question-description').textContent = question.description || '';
+  document.getElementById('i-focus-points').innerHTML = (question.focus_points || []).map(function(point) {
+    return '<span class="chip selected">' + escapeHtml(point) + '</span>';
+  }).join('');
+  document.getElementById('i-answer').value = '';
+  document.getElementById('i-feedback').innerHTML = interviewFeedbackByQuestion[interviewQuestionIndex] || '';
+  document.getElementById('i-submit-answer').style.display = 'inline-block';
+  document.getElementById('i-next-question').style.display = 'none';
+  document.getElementById('i-finish').style.display = 'none';
+}
+
+function submitInterviewAnswer(btn) {
+  var answer = document.getElementById('i-answer').value.trim();
+  if (!answer) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Scoring...';
+  var feedbackEl = document.getElementById('i-feedback');
+  feedbackEl.innerHTML = '<div class="result-box"><h3>Scoring feedback</h3><div class="content cursor" id="i-feedback-content"></div></div>';
+  var content = document.getElementById('i-feedback-content');
+
+  fetch(API + '/api/interview/answer', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      session_id: interviewSessionId,
+      question_index: interviewQuestionIndex,
+      answer: answer,
+    }),
+  })
+  .then(function(res) {
+    if (!res.ok) throw new Error('Could not score answer');
+    var reader = res.body.getReader();
+    var decoder = new TextDecoder();
+    var fullText = '';
+
+    function read() {
+      reader.read().then(function(result) {
+        if (result.done) {
+          finishInterviewFeedback(fullText);
+          return;
+        }
+
+        var chunk = decoder.decode(result.value);
+        var lines = chunk.split('\n');
+        for (var i = 0; i < lines.length; i++) {
+          if (lines[i].indexOf('data: ') === 0) {
+            var data = lines[i].slice(6);
+            if (data.trim() === '[DONE]') {
+              finishInterviewFeedback(fullText);
+              return;
+            }
+            try {
+              fullText += JSON.parse(data) + '\n\n';
+            } catch (e) {
+              fullText += data + '\n\n';
+            }
+            content.innerHTML = renderMarkdown(fullText);
+          }
+        }
+        read();
+      });
+    }
+    read();
+  })
+  .catch(function(e) {
+    content.classList.remove('cursor');
+    content.textContent = e.message;
+    btn.disabled = false;
+    btn.textContent = 'Submit answer';
+  });
+}
+
+function finishInterviewFeedback(fullText) {
+  var content = document.getElementById('i-feedback-content');
+  content.classList.remove('cursor');
+  content.innerHTML = renderMarkdown(fullText);
+  interviewFeedbackByQuestion[interviewQuestionIndex] = document.getElementById('i-feedback').innerHTML;
+  document.getElementById('i-submit-answer').disabled = false;
+  document.getElementById('i-submit-answer').textContent = 'Submit answer';
+  document.getElementById('i-submit-answer').style.display = 'none';
+  if (interviewQuestionIndex < interviewQuestions.length - 1) {
+    document.getElementById('i-next-question').style.display = 'inline-block';
+  } else {
+    document.getElementById('i-finish').style.display = 'inline-block';
+  }
+}
+
+function nextInterviewQuestion() {
+  if (interviewQuestionIndex < interviewQuestions.length - 1) {
+    interviewQuestionIndex += 1;
+    renderInterviewQuestion();
+  }
+}
+
+function finishInterview(btn) {
+  btn.disabled = true;
+  btn.textContent = 'Generating report...';
+  document.getElementById('i-report').innerHTML =
+    '<div class="result-box"><h3>Final report</h3><p class="sub">Summarizing your interview performance...</p></div>';
+
+  fetch(API + '/api/interview/finish/' + interviewSessionId, { method: 'POST' })
+  .then(function(res) {
+    if (!res.ok) throw new Error('Could not finish interview');
+    return res.json();
+  })
+  .then(function(data) {
+    var report = data.report || {};
+    var md = '## Final report\n\n';
+    md += '**Overall performance:** ' + (report.overall_performance || '') + '\n\n';
+    md += '**Readiness:** ' + (report.readiness || '') + '\n\n';
+    md += '### Strengths\n' + (report.strengths || []).map(function(x) { return '- ' + x; }).join('\n') + '\n\n';
+    md += '### Weak areas\n' + (report.weaknesses || []).map(function(x) { return '- ' + x; }).join('\n') + '\n\n';
+    md += '### Recommendations\n' + (report.recommendations || []).map(function(x) { return '- ' + x; }).join('\n') + '\n\n';
+    if (report.average_scores) {
+      md += '### Average scores\n';
+      md += '- Clarity: ' + report.average_scores.clarity + '/5\n';
+      md += '- Correctness: ' + report.average_scores.correctness + '/5\n';
+      md += '- Depth: ' + report.average_scores.depth + '/5\n';
+      md += '- Communication: ' + report.average_scores.communication + '/5\n';
+    }
+    document.getElementById('i-report').innerHTML =
+      '<div class="result-box">' + renderMarkdown(md) + '</div>';
+    btn.style.display = 'none';
+  })
+  .catch(function(e) {
+    document.getElementById('i-report').innerHTML =
+      '<div class="result-box"><h3>Could not generate report</h3><p class="sub">' + e.message + '</p></div>';
+  })
+  .finally(function() {
+    btn.disabled = false;
+    btn.textContent = 'Finish interview';
   });
 }
 </script>
